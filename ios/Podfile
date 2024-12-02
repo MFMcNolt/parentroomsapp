@@ -12,14 +12,17 @@ prepare_react_native_project!
 use_frameworks! :linkage => :static
 $RNFirebaseAsStaticFramework = true
 
-# Firebase dependencies
-pod 'Firebase', :modular_headers => true
-pod 'FirebaseCoreInternal', :modular_headers => true
-pod 'GoogleUtilities', :modular_headers => true
-pod 'FirebaseCore', :modular_headers => true
-
 target 'parentroomsapp' do
   config = use_native_modules!
+
+  # Firebase dependencies
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  
+  # Gesture Handler
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   use_react_native!(
     :path => config[:reactNativePath],
