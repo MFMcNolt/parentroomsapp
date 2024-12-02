@@ -59,5 +59,14 @@
     </array>
   	</dict>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+  	<dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.571273218624-h7qej71o2pruq42ikhj9u2tp32sm9vt7</string>
+    </array>
+  </dict>
+</array>
 </dict>
 </plist>

@@ -14,9 +14,11 @@ import {
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  updateProfile 
+  updateProfile,
+  signInWithCredential,
+  GoogleAuthProvider
 } from 'firebase/auth';
-import { auth } from '../services/firebase';
+import { auth, GoogleSignin } from '../services/firebase';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState('');
@@ -51,6 +53,29 @@ const AuthScreen = () => {
           error.message.split('auth/')[1].replace(/-/g, ' ') : 
           'Authentication failed'
       );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Check if your device supports Google Play
+      await GoogleSignin.hasPlayServices();
+      
+      // Get the user ID token
+      const { idToken } = await GoogleSignin.signIn();
+      
+      // Create a Google credential with the token
+      const credential = GoogleAuthProvider.credential(idToken);
+      
+      // Sign in with credential from the Google user
+      await signInWithCredential(auth, credential);
+    } catch (error) {
+      console.error('Google Sign In Error:', error);
+      Alert.alert('Error', 'Failed to sign in with Google. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -124,6 +149,20 @@ const AuthScreen = () => {
               </Text>
             )}
           </TouchableOpacity>
+
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity 
+            style={styles.googleButton}
+            onPress={handleGoogleSignIn}
+            disabled={isLoading}
+          >
+            <Text style={styles.googleButtonText}>Continue with Google</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -190,6 +229,33 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  dividerText: {
+    marginHorizontal: 10,
+    color: '#666',
+  },
+  googleButton: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  googleButtonText: {
+    color: '#333',
     fontWeight: '600',
     fontSize: 16,
   },
